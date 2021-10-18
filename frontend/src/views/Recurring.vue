@@ -30,7 +30,7 @@
         </td>
         <td width="75" class="center aligned">
           <router-link :to="{ name: 'edit', params: { id: recurring._id }}">Edit</router-link>
-        </td>
+        </td> 
         <td width="75" class="center aligned" @click.prevent="onDestroy(recurring._id)">
           <a :href="`/recurring/${recurring._id}`">Delete</a>
         </td>

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const Transaction = require("./transactionModel")
+const Transaction = require("./transactionModel").schema
 
 const budgetSchema = new Schema({
   title: String,
@@ -12,7 +12,8 @@ const budgetSchema = new Schema({
   enddate: Date,
   period: Number,
   periodType: String,
-  transactions: [Transaction]
+  transactions: [Transaction],
+  settlements: [Transaction]
 });
 
 module.exports = mongoose.model('Budget', budgetSchema);

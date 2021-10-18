@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const Transaction = require("./transactionModel").schema
+
 const recurringSchema = new Schema({
   title: String,
   amount: Number,
@@ -9,7 +11,9 @@ const recurringSchema = new Schema({
   ended: Boolean,
   enddate: Date,
   period: Number,
-  periodType: String
+  periodType: String,
+  transactions: [Transaction],
+  settlements: [Transaction]
 });
 
 module.exports = mongoose.model('Recurring', recurringSchema);

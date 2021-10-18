@@ -1,14 +1,31 @@
 const recurringController = require('../controllers/recurringController');
+const auth = require('../../config/auth')
 
 module.exports = app => {
   app
-    .route('/recurring')
-    .get(recurringController.list_all_recurring)
-    .post(recurringController.create_a_recurring);
+    .route('/user/account/:accountId/recurring')
+    .post(auth, recurringController.addRecurring)
 
   app
-    .route('/recurring/:recurringId')
-    .get(recurringController.read_a_recurring)
-    .put(recurringController.update_a_recurring)
-    .delete(recurringController.delete_a_recurring);
+    .route('/user/account/:accountId/recurring/:recurringId')
+    .put(auth, recurringController.updateRecurring)
+    .delete(auth, recurringController.removeRecurring)
+
+  app
+    .route('/user/account/:accountId/recurring/:recurringId/transactions')
+    .post(auth, recurringController.addTransaction)
+
+  app
+    .route('/user/account/:accountId/recurring/:recurringId/transactions/:transactionId')
+    .put(auth, recurringController.editTransaction)
+    .delete(auth, recurringController.removeTransaction)
+
+  app
+    .route('/user/account/:accountId/recurring/:recurringId/settlements')
+    .post(auth, recurringController.addSettlement)
+
+  app
+    .route('/user/account/:accountId/recurring/:recurringId/settlements/:transactionId')
+    .put(auth, recurringController.editSettlement)
+    .delete(auth, recurringController.removeSettlement)
 };

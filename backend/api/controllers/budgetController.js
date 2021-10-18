@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const userModel = mongoose.model('User');
-const recurringModel = mongoose.model('Recurring');
+const budgetModel = mongoose.model('Budget');
 const transactionModel = mongoose.model('Transaction');
 
-exports.addRecurring = async (req, res) => {
-  newRecurring = new recurringModel(req.body)
-  //console.log(req.params)
+exports.addBudget = async (req, res) => {
+  newBudget = new budgetModel(req.body)
   userModel.updateOne(
     {
       _id: req.userData._id,
@@ -13,21 +12,21 @@ exports.addRecurring = async (req, res) => {
     },
     {
       $push: {
-        "accounts.$.recurring": newRecurring
+        "accounts.$.budgets": newBudget
       }
     },
     { new: true },
     (err, user) => {
       if (err) res.send(err);
       res.json({
-        message: 'recurring successfully added',
-        addedRecurring: newRecurring
+        message: 'budget successfully added',
+        addedBudget: newBudget
       });
     }
   )
 }
 
-exports.removeRecurring = async (req, res) => {
+exports.removeBudget = async (req, res) => {
   userModel.updateOne(
     {
       _id: req.userData._id,
@@ -35,37 +34,37 @@ exports.removeRecurring = async (req, res) => {
     },
     {
       $pull: {
-        "accounts.$.recurring": { _id: req.params.recurringId }
+        "accounts.$.budgets": { _id: req.params.budgetId }
       }
     },
     (err, user) => {
       if (err) res.send(err);
       res.json({
-        message: 'recurring successfully deleted',
-        deletedRecurringId: req.params.recurringId
+        message: 'budget successfully deleted',
+        deletedBudgetId: req.params.budgetId
       });
     }
   )
 }
 
-exports.updateRecurring = async (req, res) => {
+exports.updateBudget = async (req, res) => {
   var doc = await userModel.findOne({
     _id: req.userData._id
   })
   var account = doc.accounts.id(req.params.accountId)
-  var recurring = account.recurring.id(req.params.recurringId)
-  recurring["title"] = req.body.title
-  recurring["amount"] = req.body.amount
-  recurring["startdate"] = req.body.startdate
-  recurring["ended"] = req.body.ended
-  recurring["enddate"] = req.body.enddate
-  recurring["period"] = req.body.period
-  recurring["periodType"] = req.body.periodType
+  var budget = account.budgets.id(req.params.budgetId)
+  budget["title"] = req.body.title
+  budget["amount"] = req.body.amount
+  budget["startdate"] = req.body.startdate
+  budget["ended"] = req.body.ended
+  budget["enddate"] = req.body.enddate
+  budget["period"] = req.body.period
+  budget["periodType"] = req.body.periodType
 
   await doc.save()
   res.json({
-    message: 'recurring successfully edited',
-    editedRecurringId: recurring._id
+    message: 'budget successfully edited',
+    editedBudgetId: budget._id
   });
 }
 
@@ -74,10 +73,10 @@ exports.addTransaction = async (req, res) => {
     _id: req.userData._id
   })
   var account = doc.accounts.id(req.params.accountId)
-  var recurring = account.recurring.id(req.params.recurringId)
+  var budget = account.budgets.id(req.params.budgetId)
 
   var newTransaction = new transactionModel(req.body)
-  recurring.transactions.push(newTransaction);
+  budget.transactions.push(newTransaction);
 
   await doc.save()
   res.json({
@@ -91,9 +90,9 @@ exports.removeTransaction = async (req, res) => {
     _id: req.userData._id
   })
   var account = doc.accounts.id(req.params.accountId)
-  var recurring = account.recurring.id(req.params.recurringId)
+  var budget = account.budgets.id(req.params.budgetId)
 
-  recurring.transactions = recurring.transactions.filter((transaction) => {
+  budget.transactions = budget.transactions.filter((transaction) => {
     return req.params.transactionId != transaction._id
   })
 
@@ -111,8 +110,8 @@ exports.editTransaction = async (req, res) => {
     _id: req.userData._id
   })
   var account = doc.accounts.id(req.params.accountId)
-  var recurring = account.recurring.id(req.params.recurringId)
-  var transaction = recurring.transactions.id(req.params.transactionId)
+  var budget = account.budgets.id(req.params.budgetId)
+  var transaction = budget.transactions.id(req.params.transactionId)
 
   transaction['title'] = req.body.title
   transaction['amount'] = req.body.amount
@@ -128,17 +127,17 @@ exports.editTransaction = async (req, res) => {
   });
 }
 
-//// SETTLEMENTS
+// SETTLEMENTS
 
 exports.addSettlement = async (req, res) => {
   var doc = await userModel.findOne({
     _id: req.userData._id
   })
   var account = doc.accounts.id(req.params.accountId)
-  var recurring = account.recurring.id(req.params.recurringId)
+  var budget = account.budgets.id(req.params.budgetId)
 
   var newTransaction = new transactionModel(req.body)
-  recurring.settlements.push(newTransaction);
+  budget.settlements.push(newTransaction);
 
   await doc.save()
   res.json({
@@ -152,9 +151,9 @@ exports.removeSettlement = async (req, res) => {
     _id: req.userData._id
   })
   var account = doc.accounts.id(req.params.accountId)
-  var recurring = account.recurring.id(req.params.recurringId)
+  var budget = account.budgets.id(req.params.budgetId)
 
-  recurring.settlements = recurring.settlements.filter((transaction) => {
+  budget.settlements = budget.settlements.filter((transaction) => {
     return req.params.transactionId != transaction._id
   })
 
@@ -172,8 +171,8 @@ exports.editSettlement = async (req, res) => {
     _id: req.userData._id
   })
   var account = doc.accounts.id(req.params.accountId)
-  var recurring = account.recurring.id(req.params.recurringId)
-  var transaction = recurring.settlements.id(req.params.transactionId)
+  var budget = account.budgets.id(req.params.budgetId)
+  var transaction = budget.settlements.id(req.params.transactionId)
 
   transaction['title'] = req.body.title
   transaction['amount'] = req.body.amount
