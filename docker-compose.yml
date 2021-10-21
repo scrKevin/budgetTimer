@@ -29,4 +29,4 @@ services:
     ports:
       - '8080:8080'
     environment:  
-      - BACKEND_URL=http://localhost:5000
+      - BACKEND_URL=${EXTERNAL_HOST}
