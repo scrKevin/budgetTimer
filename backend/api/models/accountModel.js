@@ -13,7 +13,8 @@ const accountSchema = new Schema({
   recurring: [Recurring],
   budgets: [Budget],
   transactions: [Transaction],
-  reservations: [Transaction]
+  reservations: [Transaction],
+  maxCredit: Number
 });
 
 module.exports = mongoose.model('Account', accountSchema);

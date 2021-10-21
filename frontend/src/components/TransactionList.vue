@@ -1,13 +1,13 @@
  <template>
-  <span>
-    <TransactionForm 
+  <!-- <span> -->
+    <!-- <TransactionForm 
       v-bind:new="true"
       :type="this.type"
       v-bind:parentId="parentId"
       @newTransaction='addTransaction'
     > 
-    </TransactionForm>
-    <ul>
+    </TransactionForm> -->
+    <!-- <ul>
       <Transaction
         v-for="transaction in myTransactionList"
         v-bind:key="transaction._id"
@@ -15,18 +15,27 @@
         @removeTransaction='removeTransaction'
         @editedTransaction='editTransaction'
       />
-    </ul>
-  </span>
+    </ul> -->
+  <!-- </span> -->
+  <div class="container grid-striped">
+      <Transaction
+        v-for="transaction in myTransactionList"
+        v-bind:key="transaction._id"
+        :transaction="transaction"
+        @removeTransaction='removeTransaction'
+        @editedTransaction='editTransaction'
+      />
+  </div>
 </template>
 
 <script>
 
-import TransactionForm from '../components/TransactionForm.vue'
+// import TransactionForm from '../components/TransactionForm.vue'
 import Transaction from '../components/Transaction.vue'
 export default {
   name: 'transactionList',
   components: {
-    TransactionForm,
+    // TransactionForm,
     Transaction
   },
   props: ["transactionList", "parentId", "type"],
@@ -65,3 +74,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.grid-striped .row:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.05);
+}
+
+.row {
+    padding:5px;
+}
+</style>

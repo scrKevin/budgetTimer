@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <!-- <li>
     <span>
       {{ (this.myBudget.velocity * (60*60)).toFixed(6) }} €/h {{ this.myBudget.title }} ({{ this.myBudget.amount }} per {{ this.myBudget.period }} {{ this.myBudget.periodType }}), balance: {{ this.myBudget.balance.toFixed(4) }} (expected: {{ this.myBudget.recurringBalance.toFixed(2) }})
       <BudgetForm v-bind:new="false" v-bind:toEdit="this.budget" @editedBudget='editBudget'></BudgetForm>
@@ -25,25 +25,81 @@
       >
       </TransactionList>
     </span>
-  </li>
+  </li> -->
+  <div class="row">
+    <div class="col-xs-3 col-md-1">{{ (this.myBudget.velocity * (60*60)).toFixed(6) }}</div>
+    <div class="col-xs-5 col-md-3">{{ this.myBudget.title }} ({{ this.myBudget.amount }} per {{ this.myBudget.period }} {{ this.myBudget.periodType }})</div>
+    <div class="col-xs-4 col-md-1">{{ this.dueIn }}</div>
+    <div class="col-xs-2 col-md-1">{{ this.myBudget.balance.toFixed(2) }} ({{ this.myBudget.recurringBalance.toFixed(2) }})</div>
+    <div class="col-xs-2 col-md-1"><BudgetForm v-bind:new="false" v-bind:toEdit="this.budget" @editedBudget='editBudget'></BudgetForm></div>
+    <div class="col-xs-2 col-md-1"><b-button variant="danger" @click="deleteThisBudget">
+        ×
+      </b-button></div>
+    <div class="col-xs-3 col-md-2">
+      <TransactionForm 
+        v-bind:new="true"
+        :type="this.transactionType"
+        v-bind:parentId="budget._id"
+        @newTransaction='newTransaction'
+      > 
+      </TransactionForm>
+      <input class="form-check-input" type="checkbox" v-model="transactionsVisible" style="margin: 9px;">
+    </div>
+    <div class="col-xs-3 col-md-2">
+      <TransactionForm 
+        v-bind:new="true"
+        :type="this.settlementType"
+        v-bind:parentId="budget._id"
+        @newTransaction='newSettlement'
+      > 
+      </TransactionForm>
+      <input class=" form-check-input" type="checkbox" v-model="settlementsVisible" style="margin: 9px;">
+    </div>
+    <div class="col-xs-12" v-if="transactionsVisible">
+      <h4>Transactions:</h4>
+      <TransactionList 
+        :parentId="budget._id"
+        :type="this.transactionType"
+        :transactionList="budget.transactions"
+        @removeTransaction="removeTransaction"
+        @editedTransaction="editTransaction"
+      >
+      </TransactionList>
+    </div>
+    <div class="col-xs-12" v-if="settlementsVisible">
+      <h4>Settlements:</h4>
+      <TransactionList 
+        :parentId="budget._id"
+        :type="this.settlementType"
+        :transactionList="budget.settlements"
+        @removeTransaction="removeSettlement"
+        @editedTransaction="editSettlement"
+      >
+      </TransactionList>
+    </div>
+  </div>
 </template>
 
 <script>
   import BudgetForm from "./BudgetForm.vue"
   import TransactionList from "./TransactionList.vue"
+  import TransactionForm from '../components/TransactionForm.vue'
   import RecurringBudgetsMethods from "../helpers/recurringBudgetsMethods"
   export default {
     props: ["budget", "account"],
     mixins: [RecurringBudgetsMethods],
     components: {
       BudgetForm,
-      TransactionList
+      TransactionList,
+      TransactionForm
     },
     data() {
       return {
         myBudget: this.budget,
         transactionType: "transaction",
-        settlementType: "settlement"
+        settlementType: "settlement",
+        transactionsVisible: false,
+        settlementsVisible: false
       }
       
     },
@@ -101,6 +157,20 @@
       //clearInterval(this.interval);
     },
     computed: {
+      dueIn: function() {
+
+        var d = Math.floor(this.myBudget.dueIn / (3600*24));
+        var h = Math.floor(this.myBudget.dueIn % (3600*24) / 3600);
+        // var m = Math.floor(this.myRecurring.dueIn % 3600 / 60);
+        // var s = Math.floor(this.myRecurring.dueIn % 60);
+
+        var dDisplay = d > 0 ? d + (d == 1 ? " d " : " d ") : "";
+        var hDisplay = h > 0 ? h + (h == 1 ? " h" : " h") : "";
+        // var mDisplay = m > 0 ? m + (m == 1 ? ":" : ":") : "";
+        // var sDisplay = s > 0 ? s + (s == 1 ? "" : "") : "";
+        return dDisplay + hDisplay
+        
+      }
     },
     watch: {
       budget: function (newVal) {

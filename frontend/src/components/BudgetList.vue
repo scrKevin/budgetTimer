@@ -1,13 +1,13 @@
  <template>
   <div>
-    <h2>Budgets {{ this.myBudgetList.length }}
+    <h4>Budgets {{ this.myBudgetList.length }}
     <BudgetForm 
       v-bind:new="true"
       v-bind:accountId="account._id"
       @newBudget='addBudget'
     > 
-    </BudgetForm></h2>
-    <ul>
+    </BudgetForm></h4>
+    <!-- <ul>
       <Budget
         v-for="budget in myBudgetList"
         v-bind:key="budget._id"
@@ -16,7 +16,27 @@
         @removeBudget='removeBudget'
         @editedBudget='editBudget'
       />
-    </ul>
+    </ul> -->
+    <div class="container grid-striped">
+      <div class="row" style="font-weight: bold">
+        <div class="col-xs-3 col-md-1">V €/h</div>
+        <div class="col-xs-5 col-md-3">Description</div>
+        <div class="col-xs-4 col-md-1">Due in</div>
+        <div class="col-xs-2 col-md-1">Balance</div>
+        <div class="col-xs-2 col-md-1"></div>
+        <div class="col-xs-2 col-md-1"></div>
+        <div class="col-xs-3 col-md-2"></div>
+        <div class="col-xs-3 col-md-2"></div>
+      </div>
+      <Budget
+        v-for="budget in myBudgetList"
+        v-bind:key="budget._id"
+        :budget="budget"
+        :account="account"
+        @removeBudget='removeBudget'
+        @editedBudget='editBudget'
+      />
+    </div>
   </div>
 </template>
 
@@ -64,3 +84,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.grid-striped .row:nth-of-type(odd) {
+    background-color: rgba(2, 0, 130, 0.15);
+}
+
+.row {
+    padding:5px;
+}
+</style>

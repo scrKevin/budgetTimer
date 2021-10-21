@@ -28,6 +28,12 @@
           placeholder="startbalance"
           v-model="account.startbalance"
         />
+        <input
+          type="number"
+          step=".01"
+          placeholder="max credit"
+          v-model="account.maxCredit"
+        />
         <button type="submit">Save</button>
         </form>
       <!-- </template>
@@ -58,6 +64,7 @@
             name: this.toEdit.name,
             startdate: this.formatDate(this.toEdit.startdate),
             startbalance: this.toEdit.startbalance,
+            maxCredit: this.toEdit.maxCredit,
           }
         };
       }
@@ -67,7 +74,8 @@
           account: {
             name: "",
             startdate: null,
-            startbalance: 0            
+            startbalance: 0,
+            maxCredit: 0           
           }
         };
       }

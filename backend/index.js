@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const config = require('./config/config');
 
 global.User = require('./api/models/userModel')
 
@@ -9,10 +10,10 @@ const routes = require('./api/routes')
 
 mongoose.Promise = global.Promise
 mongoose.connect(
-  'mongodb://localhost/budgetTimer',
+  config.DB,
 );
 
-const port = process.env.PORT || 5000
+const port = config.APP_PORT
 const app = express();
 
 app.use(cors())

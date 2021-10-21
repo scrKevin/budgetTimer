@@ -8,7 +8,7 @@
       > 
       </AccountForm></h1>
     </div>
-    <ul>
+    <!-- <ul>
       <Account
         v-for="account in myAccountList"
         v-bind:key="account._id"
@@ -16,7 +16,16 @@
         @removedAccount='removeAccount'
         @editedAccount='editAccount'
       />
-      </ul>
+      </ul> -->
+      <div class="container">
+        <Account
+        v-for="account in myAccountList"
+        v-bind:key="account._id"
+        :account="account"
+        @removedAccount='removeAccount'
+        @editedAccount='editAccount'
+      />
+      </div>
   </div>
 </template>
 

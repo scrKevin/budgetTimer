@@ -34,6 +34,7 @@ exports.update_account = async (req, res) => {
   account['name'] = req.body.name
   account['startdate'] = req.body.startdate
   account['startbalance'] = req.body.startbalance
+  account['maxCredit'] = req.body.maxCredit
   await user.save()
   res.json({
     message: 'account successfully edited',

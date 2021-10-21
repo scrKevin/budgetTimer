@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <!-- <li>
     <span>
       {{ (this.myRecurring.velocity * (60*60)).toFixed(6) }} €/h {{ this.myRecurring.title }} ({{ this.myRecurring.amount }} per {{ this.myRecurring.period }} {{ this.myRecurring.periodType }}) due in: {{ this.dueIn }}, balance: {{ this.myRecurring.recurringBalance.toFixed(2) }}
       <RecurringForm v-bind:new="false" v-bind:toEdit="this.recurring" @editedRecurring='editRecurring'></RecurringForm>
@@ -25,25 +25,81 @@
       >
       </TransactionList>
     </span>
-  </li>
+  </li> -->
+  <div class="row">
+    <div class="col-xs-3 col-md-1">{{ (this.myRecurring.velocity * (60*60)).toFixed(6) }}</div>
+    <div class="col-xs-5 col-md-3">{{ this.myRecurring.title }} ({{ this.myRecurring.amount }} per {{ this.myRecurring.period }} {{ this.myRecurring.periodType }})</div>
+    <div class="col-xs-4 col-md-1">{{ this.dueIn }}</div>
+    <div class="col-xs-2 col-md-1">{{ this.myRecurring.recurringBalance.toFixed(2) }}</div>
+    <div class="col-xs-2 col-md-1"><RecurringForm v-bind:new="false" v-bind:toEdit="this.recurring" @editedRecurring='editRecurring'></RecurringForm></div>
+    <div class="col-xs-2 col-md-1"><b-button variant="danger" @click="deleteThisRecurring">
+        ×
+      </b-button></div>
+    <div class="col-xs-3 col-md-2">
+      <TransactionForm 
+        v-bind:new="true"
+        :type="this.transactionType"
+        v-bind:parentId="recurring._id"
+        @newTransaction='newTransaction'
+      > 
+      </TransactionForm>
+      <input class="form-check-input" type="checkbox" v-model="transactionsVisible" style="margin: 9px;">
+    </div>
+    <div class="col-xs-3 col-md-2">
+      <TransactionForm 
+        v-bind:new="true"
+        :type="this.settlementType"
+        v-bind:parentId="recurring._id"
+        @newTransaction='newSettlement'
+      > 
+      </TransactionForm>
+      <input class=" form-check-input" type="checkbox" v-model="settlementsVisible" style="margin: 9px;">
+    </div>
+    <div class="col-xs-12" v-if="transactionsVisible">
+      <h4>Transactions:</h4>
+      <TransactionList 
+        :parentId="recurring._id"
+        :type="this.transactionType"
+        :transactionList="recurring.transactions"
+        @removeTransaction="removeTransaction"
+        @editedTransaction="editTransaction"
+      >
+      </TransactionList>
+    </div>
+    <div class="col-xs-12" v-if="settlementsVisible">
+      <h4>Settlements:</h4>
+      <TransactionList 
+        :parentId="recurring._id"
+        :type="this.settlementType"
+        :transactionList="recurring.settlements"
+        @removeTransaction="removeSettlement"
+        @editedTransaction="editSettlement"
+      >
+      </TransactionList>
+    </div>
+  </div>
 </template>
 
 <script>
   import RecurringForm from "./RecurringForm.vue"
   import TransactionList from "./TransactionList.vue"
+  import TransactionForm from '../components/TransactionForm.vue'
   import RecurringBudgetsMethods from "../helpers/recurringBudgetsMethods"
   export default {
     props: ["recurring", "account"],
     mixins: [RecurringBudgetsMethods],
     components: {
       RecurringForm,
-      TransactionList
+      TransactionList,
+      TransactionForm
     },
     data() {
       return {
         myRecurring: this.recurring,
         transactionType: "transaction",
-        settlementType: "settlement"
+        settlementType: "settlement",
+        transactionsVisible: false,
+        settlementsVisible: false
       }
       
     },
@@ -108,8 +164,8 @@
         // var m = Math.floor(this.myRecurring.dueIn % 3600 / 60);
         // var s = Math.floor(this.myRecurring.dueIn % 60);
 
-        var dDisplay = d > 0 ? d + (d == 1 ? " day " : " days ") : "";
-        var hDisplay = h > 0 ? h + (h == 1 ? " hour" : " hours") : "";
+        var dDisplay = d > 0 ? d + (d == 1 ? " d " : " d ") : "";
+        var hDisplay = h > 0 ? h + (h == 1 ? " h" : " h") : "";
         // var mDisplay = m > 0 ? m + (m == 1 ? ":" : ":") : "";
         // var sDisplay = s > 0 ? s + (s == 1 ? "" : "") : "";
         return dDisplay + hDisplay

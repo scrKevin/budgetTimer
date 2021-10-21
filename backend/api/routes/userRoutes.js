@@ -4,7 +4,7 @@ const auth = require('../../config/auth')
 module.exports = app => {
   app
     .route('/user')
-    .get(userController.list_all_users)
+    .get(auth, userController.list_all_users)
     .post(userController.create_a_user);
   
    app

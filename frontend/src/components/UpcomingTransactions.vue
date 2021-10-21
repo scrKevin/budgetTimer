@@ -1,7 +1,9 @@
  <template>
   <span>
-    {{ dateWithLowestBalance.balance.toFixed(2) }} @ {{ dateWithLowestBalance.date.toLocaleString("NL-nl") }}
-    <ul>
+    {{ dateWithLowestBalance.balance.toFixed(2) }} @ {{ dateWithLowestBalance.date.toLocaleString("NL-nl") }} <br>
+    Below {{ account.maxCredit }} @ {{ dateWithLowestBalance.firstDateBelowMaxCredit.toLocaleString("NL-nl") }} <br>
+    Spendable: {{ dateWithLowestBalance.spendable.toFixed(2) }}
+    <ul class="upcomingTransactionsList">
       <li v-for="transaction in totalNextTransactions" :key=transaction.id>
         {{ transaction.balance.toFixed(2) }} @{{ transaction.time.toLocaleString("NL-nl") }} : {{ transaction.title }} {{ transaction.amount }}
       </li>
@@ -34,13 +36,22 @@ export default {
     dateWithLowestBalance: function() {
       var lowestDate = 0;
       var lowestBalance = 999999999999999;
+      var firstDateBelowMaxCredit = -1;
+      var wentBelowMaxCredit = false;
       for (let transaction of this.totalNextTransactions) {
         if (transaction.balance < lowestBalance) {
           lowestBalance = transaction.balance
           lowestDate = transaction.time
         }
+        if (!wentBelowMaxCredit) {
+          if (transaction.balance < this.account.maxCredit) {
+            firstDateBelowMaxCredit = transaction.time
+            wentBelowMaxCredit = true
+          }
+        }
       }
-      return {date: lowestDate, balance: lowestBalance}
+      var spendable = -1 * (this.account.maxCredit - lowestBalance)
+      return {date: lowestDate, balance: lowestBalance, firstDateBelowMaxCredit: firstDateBelowMaxCredit, spendable: spendable}
     },
     totalNextTransactions: function () {
       console.log("test next transactions")
@@ -102,3 +113,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.upcomingTransactionsList {
+  max-height: 300px;
+  overflow: scroll;
+  max-width: 80%;
+}
+</style>

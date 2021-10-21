@@ -1,5 +1,5 @@
 <template>
-  <li style="border-bottom: 2px solid black; padding: 20px;">
+  <!-- <li style="border-bottom: 2px solid black; padding: 20px;">
     <div>
       <div>{{ account.name }}
       <AccountForm v-bind:new="false" v-bind:toEdit="this.account" @editedAccount='editAccount'></AccountForm>
@@ -40,7 +40,71 @@
     <div>Current balance: {{ myAccount.currentBalance.toFixed(2) }}</div>
     <div>Expected: {{ (-1*myAccount.expected).toFixed(2) }}</div>
     <UpcomingTransactions :account="this.account" ></UpcomingTransactions>
-  </li>
+  </li> -->
+  <div class="row">
+    <div class="col-xs-12">
+      <h3>{{ account.name }} {{ myAccount.currentBalance.toFixed(2) }}
+      <AccountForm v-bind:new="false" v-bind:toEdit="this.account" @editedAccount='editAccount'></AccountForm>
+      <b-button variant="danger" @click="deleteThisAccount">
+        ×
+      </b-button></h3>
+    </div>
+    <div class="col-xs-12">
+      Total recurring account velocity: {{ totalAccountRecurringVelocity.hour }} €/hour / {{ totalAccountRecurringVelocity.month }} €/month / {{ totalAccountRecurringVelocity.year }} €/year
+    </div>
+    <!-- <div class="col-xs-12"> -->
+      <RecurringList :recurringList="myAccount.recurring" :account="myAccount"></RecurringList>
+    <!-- </div> -->
+    <div class="col-xs-12">
+      <BudgetList :budgetList="myAccount.budgets" :account="myAccount"></BudgetList>
+    </div>
+    <div class="col-xs-12">
+      <h4>Transactions:</h4>
+      <TransactionForm 
+        v-bind:new="true"
+        :type="this.transactionType"
+        v-bind:parentId="myAccount._id"
+        @newTransaction='newTransaction'
+      > 
+      </TransactionForm>
+    </div>
+    <div class="col-xs-12">
+      <TransactionList 
+        :parentId="account._id"
+        :type="this.transactionType"
+        :transactionList="account.transactions"
+        @removeTransaction="removeTransaction"
+        @editedTransaction="editTransaction"
+      >
+      </TransactionList>
+    </div>
+    <div class="col-xs-12">
+      <h4>Reservations:</h4>
+      <TransactionForm 
+        v-bind:new="true"
+        :type="this.reservationType"
+        v-bind:parentId="myAccount._id"
+        @newTransaction='newReservation'
+      > 
+      </TransactionForm>
+    </div>
+    <div class="col-xs-12">
+      <TransactionList 
+        :parentId="account._id"
+        :type="this.reservationType"
+        :transactionList="account.reservations"
+        @removeTransaction="removeReservation"
+        @editedTransaction="editReservation"
+      >
+    </TransactionList>
+    </div>
+    <div class="col-xs-12">
+      <div>Expected: {{ (-1*myAccount.expected).toFixed(2) }}</div>
+    </div>
+    <div class="col-xs-12">
+      <UpcomingTransactions :account="this.account" ></UpcomingTransactions>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -48,6 +112,7 @@
   import RecurringList from "./RecurringList.vue"
   import BudgetList from "./BudgetList.vue"
   import TransactionList from "./TransactionList.vue"
+  import TransactionForm from '../components/TransactionForm.vue'
   import RecurringBudgetsMethods from "../helpers/recurringBudgetsMethods"
   import UpcomingTransactions from "./UpcomingTransactions.vue"
   export default {
@@ -58,13 +123,15 @@
       RecurringList,
       BudgetList,
       TransactionList,
+      TransactionForm,
       UpcomingTransactions
     },
     data() {
       return {
         myAccount: this.account,
         transactionType: "transaction",
-        reservationType: "reservation"
+        reservationType: "reservation",
+        settlementType: "settlement"
       }
     },
     methods: {
@@ -117,7 +184,10 @@
     },
     computed: {
       totalAccountRecurringVelocity: function() {
-        return ((this.myAccount.totalRecurringVelocity + this.myAccount.totalBudgetVelocity) * 60 *60).toFixed(4)
+        var vH = (this.myAccount.totalRecurringVelocity + this.myAccount.totalBudgetVelocity) * 60 *60
+        var vM = vH * 24 * 30
+        var vY = vH * 24 * 365
+        return {hour: vH.toFixed(6), month: vM.toFixed(2), year: vY.toFixed(2)}
       }
     },
     watch: {
@@ -131,3 +201,11 @@
   
 </script>
 
+<style scoped>
+.row {
+  border: 4px solid #0dcaf0;
+  border-radius: 5px;
+  padding: 6px;
+  margin-bottom: 5px;
+}
+</style>
