@@ -18,6 +18,8 @@ services:
     container_name: db
     image: mongo:4.0
     restart: always
+    volumes:
+      - /data/db:/data/db
 
   frontend:
     container_name: frontend
