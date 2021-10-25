@@ -11,7 +11,7 @@ import 'bootstrap-vue/dist/bootstrap-vue';
 
 
 const base = axios.create({
-  baseURL: process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://budget.bitwiseworkshop.nl/api"
+  baseURL: process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://backend"
 });
 
 base.interceptors.request.use(
