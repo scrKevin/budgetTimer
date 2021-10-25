@@ -3,29 +3,29 @@ const auth = require('../../config/auth')
 
 module.exports = app => {
   app
-    .route('/user/account/:accountId/budgets')
+    .route('/api/user/account/:accountId/budgets')
     .post(auth, budgetController.addBudget)
 
   app
-    .route('/user/account/:accountId/budgets/:budgetId')
+    .route('/api/user/account/:accountId/budgets/:budgetId')
     .put(auth, budgetController.updateBudget)
     .delete(auth, budgetController.removeBudget)
 
   app
-    .route('/user/account/:accountId/budgets/:budgetId/transactions')
+    .route('/api/user/account/:accountId/budgets/:budgetId/transactions')
     .post(auth, budgetController.addTransaction)
 
   app
-    .route('/user/account/:accountId/budgets/:budgetId/transactions/:transactionId')
+    .route('/api/user/account/:accountId/budgets/:budgetId/transactions/:transactionId')
     .put(auth, budgetController.editTransaction)
     .delete(auth, budgetController.removeTransaction)
 
   app
-    .route('/user/account/:accountId/budgets/:budgetId/settlements')
+    .route('/api/user/account/:accountId/budgets/:budgetId/settlements')
     .post(auth, budgetController.addSettlement)
 
   app
-    .route('/user/account/:accountId/budgets/:budgetId/settlements/:transactionId')
+    .route('/api/user/account/:accountId/budgets/:budgetId/settlements/:transactionId')
     .put(auth, budgetController.editSettlement)
     .delete(auth, budgetController.removeSettlement)
 };

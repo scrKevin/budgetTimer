@@ -4,29 +4,29 @@ const auth = require('../../config/auth')
 module.exports = app => {
 
   app
-  .route('/user/account')
+  .route('/api/user/account')
   .post(auth, accountController.add_account)
 
   app
-  .route('/user/account/:accountId')
+  .route('/api/user/account/:accountId')
   .put(auth, accountController.update_account)
   .delete(auth, accountController.remove_account)
 
   app
-    .route('/user/account/:accountId/transactions')
+    .route('/api/user/account/:accountId/transactions')
     .post(auth, accountController.addTransaction)
 
   app
-    .route('/user/account/:accountId/transactions/:transactionId')
+    .route('/api/user/account/:accountId/transactions/:transactionId')
     .put(auth, accountController.editTransaction)
     .delete(auth, accountController.removeTransaction)
 
   app
-    .route('/user/account/:accountId/reservations')
+    .route('/api/user/account/:accountId/reservations')
     .post(auth, accountController.addReservation)
 
   app
-    .route('/user/account/:accountId/reservations/:transactionId')
+    .route('/api/user/account/:accountId/reservations/:transactionId')
     .put(auth, accountController.editReservation)
     .delete(auth, accountController.removeReservation)
 
