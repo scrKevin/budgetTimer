@@ -49,8 +49,9 @@ export default {
             scaleLabel: {
               display: true,
             }
-        }],
-      }}
+          }],
+        }
+      }
     };
   },
   methods: {
@@ -90,10 +91,22 @@ export default {
     },
     chartData: function () {
       var data = [];
+      var spendableData = [];
       for (let transaction of this.totalNextTransactions) {
         data.push({x: transaction.time, y: transaction.balance})
+        spendableData.push({x: transaction.time, y: transaction.spendable})
       }
-      console.log(data)
+      var minData = [
+        {
+          x: this.totalNextTransactions[0].time,
+          y: this.account.maxCredit
+        },
+        {
+          x: this.totalNextTransactions[this.totalNextTransactions.length -1].time,
+          y: this.account.maxCredit
+        }
+      ];
+      //console.log(data)
       var datacollection = {
         datasets: [
           {
@@ -103,6 +116,22 @@ export default {
             "fill":false,
             "borderColor":"rgb(75, 192, 192)",
             "lineTension":0.1
+          },
+          {
+            label: 'Min balance',
+            backgroundColor: 'rgb(255, 0, 0)',
+            data: minData,
+            "fill":false,
+            "borderColor":"rgb(255, 0, 0)",
+            "lineTension":0.1
+          },
+          {
+            label: 'Spendable',
+            backgroundColor: 'rgb(0, 255, 0)',
+            data: spendableData,
+            "fill":false,
+            "borderColor":"rgb(0, 255, 0)",
+            "lineTension":0.1
           }
         ]
       }
@@ -110,7 +139,7 @@ export default {
       return datacollection
     },
     totalNextTransactions: function () {
-      console.log("test next transactions")
+      //console.log("test next transactions")
       var totalArray = [];
       var nextId = 0;
       for (let recurring of this.account.recurring) {
@@ -157,6 +186,14 @@ export default {
       for (let transaction of totalArray) {
         balance += transaction.amount;
         transaction.balance = balance;
+      }
+
+      var reversedLowest = 99999999999999;
+      for (var i = totalArray.length - 1; i >= 0; i--) {
+        if (totalArray[i].balance < reversedLowest) {
+          reversedLowest = totalArray[i].balance
+        }
+        totalArray[i].spendable = -1 * (this.account.maxCredit - reversedLowest)
       }
       return totalArray
     }
