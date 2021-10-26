@@ -11,7 +11,7 @@ module.exports = app => {
     .route('/api/user/:userId')
     .get(auth, userController.get_a_user)
     .put(auth, userController.update_a_user)
-    .delete(userController.delete_a_user);
+    .delete(auth, userController.delete_a_user);
 
   app
     .route('/api/user/login')
@@ -24,4 +24,8 @@ module.exports = app => {
   app
     .route('/api/user/me/logout')
     .post(auth, userController.logout_user)
+
+  app
+    .route('/api/user/:userId/import-accounts')
+    .post(auth, userController.importAccounts)
 };

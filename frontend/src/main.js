@@ -9,9 +9,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import 'bootstrap-vue/dist/bootstrap-vue';
 
 
+var backEnd_URL = "http://localhost:5000/api";
+if (process.env.NODE_ENV == "production") {
+  backEnd_URL = "https://budget.bitwiseworkshop.nl/api"  
+}
 
 const base = axios.create({
-  baseURL: process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://budget.bitwiseworkshop.nl/api"
+  baseURL: backEnd_URL
 });
 
 base.interceptors.request.use(

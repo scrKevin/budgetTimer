@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const userModel = mongoose.model('User');
 const accountModel = mongoose.model('Account')
+const budgetModel = mongoose.model('Budget')
 const recurringModel = mongoose.model('Recurring')
+const transActionModel = mongoose.model('Transaction')
 
 exports.list_all_users = (req, res) => {
   //console.log("req. list all users")
@@ -12,7 +14,7 @@ exports.list_all_users = (req, res) => {
 };
 
 exports.create_a_user = (req, res) => {
-  console.log(req.body)
+  //console.log(req.body)
   const newUser = new userModel(req.body);
   newUser.save(async (err, user) => {
     if (err) res.send(err);
@@ -20,6 +22,47 @@ exports.create_a_user = (req, res) => {
     res.status(201).json({ token });
   });
 };
+
+function normalize(parent) {
+  if (parent) {
+    delete parent._id
+    for (let value of Object.values(parent)) {
+      if (value !== null) {
+        if (typeof(value) == 'object') {
+          for (let child of value) {
+            normalize(child)
+          }
+        }
+      }
+    }
+    // for (var i = 0, l = parent.children.length; i < l; ++i) {
+    //   var child = parent.children[i];
+    //   //delete child._id
+    //   normalize(child);
+    // }
+  }
+}
+
+exports.importAccounts = (req, res) => {
+  if (req.userData._id == req.params.userId) {
+    //console.log(req.body)
+    userModel.findById(req.params.userId, (err, user) => {
+      for (let account of req.body) {
+        normalize(account)
+        var newAccount = new accountModel(account)
+        user.accounts.push(newAccount)
+      }
+      user.save(err => {
+        res.status(201).json({message: "success"})
+      })
+    });
+    
+  } else {
+    res.status(401).json({
+      message: "Authentification Failed"
+    });
+  }
+}
 
 exports.login_user = async (req, res) => {
   try {
