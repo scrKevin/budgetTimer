@@ -26,7 +26,7 @@
       </TransactionList>
     </span>
   </li> -->
-  <div class="row">
+  <div class="row" v-if="show">
     <div class="col-xs-3 col-md-1">{{ (this.myRecurring.velocity * (60*60)).toFixed(6) }}</div>
     <div class="col-xs-5 col-md-3">{{ this.myRecurring.title }} ({{ this.myRecurring.amount }} per {{ this.myRecurring.period }} {{ this.myRecurring.periodType }})</div>
     <div class="col-xs-4 col-md-1">{{ this.dueIn }}</div>
@@ -86,7 +86,7 @@
   import TransactionForm from '../components/TransactionForm.vue'
   import RecurringBudgetsMethods from "../helpers/recurringBudgetsMethods"
   export default {
-    props: ["recurring", "account"],
+    props: ["recurring", "account", "showAll"],
     mixins: [RecurringBudgetsMethods],
     components: {
       RecurringForm,
@@ -170,6 +170,19 @@
         // var sDisplay = s > 0 ? s + (s == 1 ? "" : "") : "";
         return dDisplay + hDisplay
         
+      },
+      show: function () {
+        if (this.showAll) {
+          return true
+        } else {
+          //return false
+          if (this.myRecurring.recurringBalance > 0.001 || this.myRecurring.recurringBalance < -0.001 || this.myRecurring.dueIn < 3600*24*2) {
+            return true
+          }
+          else {
+            return false
+          }
+        }
       }
     },
     watch: {

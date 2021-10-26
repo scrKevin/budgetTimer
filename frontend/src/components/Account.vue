@@ -59,7 +59,7 @@
       <BudgetList :budgetList="myAccount.budgets" :account="myAccount"></BudgetList>
     </div>
     <div class="col-xs-12">
-      <h4>Transactions:</h4>
+      <h4>Transactions: {{ myAccount.transactions.length }} <input type="checkbox" v-model="showTransactions"/></h4>
       <TransactionForm 
         v-bind:new="true"
         :type="this.transactionType"
@@ -70,6 +70,7 @@
     </div>
     <div class="col-xs-12">
       <TransactionList 
+        v-if="showTransactions"
         :parentId="account._id"
         :type="this.transactionType"
         :transactionList="account.transactions"
@@ -79,7 +80,7 @@
       </TransactionList>
     </div>
     <div class="col-xs-12">
-      <h4>Reservations:</h4>
+      <h4>Reservations:{{ myAccount.reservations.length }} <input type="checkbox" v-model="showReservations"/></h4>
       <TransactionForm 
         v-bind:new="true"
         :type="this.reservationType"
@@ -89,7 +90,8 @@
       </TransactionForm>
     </div>
     <div class="col-xs-12">
-      <TransactionList 
+      <TransactionList
+        v-if="showReservations"
         :parentId="account._id"
         :type="this.reservationType"
         :transactionList="account.reservations"
@@ -128,6 +130,8 @@
     },
     data() {
       return {
+        showTransactions: false,
+        showReservations: false,
         myAccount: this.account,
         transactionType: "transaction",
         reservationType: "reservation",

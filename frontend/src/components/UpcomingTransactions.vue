@@ -3,7 +3,8 @@
     {{ dateWithLowestBalance.balance.toFixed(2) }} @ {{ dateWithLowestBalance.date.toLocaleString("NL-nl") }} <br>
     Below {{ account.maxCredit }} @ {{ dateWithLowestBalance.firstDateBelowMaxCredit.toLocaleString("NL-nl") }} <br>
     Spendable: {{ dateWithLowestBalance.spendable.toFixed(2) }}
-    <ul class="upcomingTransactionsList">
+    <input type="checkbox" v-model="showUpcomingList"/>
+    <ul class="upcomingTransactionsList" v-if="showUpcomingList">
       <li v-for="transaction in totalNextTransactions" :key=transaction.id>
         {{ transaction.balance.toFixed(2) }} @{{ transaction.time.toLocaleString("NL-nl") }} : {{ transaction.title }} {{ transaction.amount }}
       </li>
@@ -24,6 +25,7 @@ export default {
   props: ["account"],
   data() {
     return {
+      showUpcomingList: false,
       chartOptions: { 
         responsive: true,
         maintainAspectRatio: false,

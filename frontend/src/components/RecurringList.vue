@@ -6,7 +6,7 @@
       v-bind:accountId="account._id"
       @newRecurring='addRecurring'
     > 
-    </RecurringForm></h4>
+    </RecurringForm><input type="checkbox" v-model="showAll"/></h4>
     <!-- <ul>
       <Recurring
         v-for="recurring in myRecurringList"
@@ -31,6 +31,7 @@
       <Recurring
         v-for="recurring in myRecurringList"
         v-bind:key="recurring._id"
+        :showAll="showAll"
         :recurring="recurring"
         :account="account"
         @removeRecurring='removeRecurring'
@@ -55,7 +56,8 @@ export default {
   props: ["recurringList", "account"],
   data() {
     return {
-      myRecurringList: this.recurringList
+      myRecurringList: this.recurringList,
+      showAll: false
     };
   },
   methods: {
