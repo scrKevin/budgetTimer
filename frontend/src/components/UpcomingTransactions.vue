@@ -8,17 +8,49 @@
         {{ transaction.balance.toFixed(2) }} @{{ transaction.time.toLocaleString("NL-nl") }} : {{ transaction.title }} {{ transaction.amount }}
       </li>
     </ul>
+    <div class="chartAreaWrapper">
+      <line-chart :chart-data="chartData" :options="chartOptions" style="float: left" class="balance-chart"></line-chart>
+    </div>
   </span>
 </template>
 
 <script>
 
+import LineChart from './LineChart.js'
+
 export default {
   name: 'UpcomingTransactions',
+  components: { LineChart },
   props: ["account"],
   data() {
     return {
-      
+      chartOptions: { 
+        responsive: true,
+        maintainAspectRatio: false,
+        // Container for pan options
+        pan: {
+          // Boolean to enable panning
+          enabled: true,
+
+          // Panning directions. Remove the appropriate direction to disable
+          // Eg. 'y' would only allow panning in the y direction
+          mode: 'xy'
+        },
+        scales: {
+          xAxes: [{
+            type: 'time', // MANDATORY TO SHOW YOUR POINTS! (THIS IS THE IMPORTANT BIT) 
+            display: true, // mandatory
+            scaleLabel: {
+              display: true, // mandatory
+            },
+          }], 
+          yAxes: [{ // and your y axis customization as you see fit...
+            display: true,
+            scaleLabel: {
+              display: true,
+            }
+        }],
+      }}
     };
   },
   methods: {
@@ -31,6 +63,9 @@ export default {
       }
       return 0;
     },
+    getRandomInt () {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    }
   },
   computed: {
     dateWithLowestBalance: function() {
@@ -52,6 +87,27 @@ export default {
       }
       var spendable = -1 * (this.account.maxCredit - lowestBalance)
       return {date: lowestDate, balance: lowestBalance, firstDateBelowMaxCredit: firstDateBelowMaxCredit, spendable: spendable}
+    },
+    chartData: function () {
+      var data = [];
+      for (let transaction of this.totalNextTransactions) {
+        data.push({x: transaction.time, y: transaction.balance})
+      }
+      console.log(data)
+      var datacollection = {
+        datasets: [
+          {
+            label: 'Upcoming',
+            backgroundColor: 'rgb(75, 192, 192)',
+            data: data,
+            "fill":false,
+            "borderColor":"rgb(75, 192, 192)",
+            "lineTension":0.1
+          }
+        ]
+      }
+      
+      return datacollection
     },
     totalNextTransactions: function () {
       console.log("test next transactions")
@@ -119,5 +175,16 @@ export default {
   max-height: 300px;
   overflow: scroll;
   max-width: 80%;
+}
+
+.chartAreaWrapper {
+  width: 100%;
+  overflow-x: scroll;
+}
+
+.balance-chart{
+  margin-top: 20px;
+  height: 500px;
+  width: 6000px;
 }
 </style>
