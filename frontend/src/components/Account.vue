@@ -156,7 +156,8 @@
         //this.$emit("editedAccount", editedAccountId, data)
       },
       budgetUpdated() {
-        this.updateAccount(this.myAccount)
+        var now = new Date()
+        this.updateAccount(this.myAccount, now)
       },
       async newTransaction(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/transactions/`, transactionToAdd);
