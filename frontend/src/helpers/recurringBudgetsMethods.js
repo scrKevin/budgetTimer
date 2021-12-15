@@ -231,7 +231,9 @@ export default {
         if (!budget.ended) {
           account.totalBudgetVelocity += budget.velocity
         }
-        account.expected += budget.recurringBalance
+        if (budget.recurringBalance > 0) {
+          account.expected += budget.recurringBalance
+        }
         for (let transaction of budget.transactions) {
           currentBalance += transaction.amount
         }

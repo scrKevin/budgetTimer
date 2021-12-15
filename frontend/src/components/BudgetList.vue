@@ -35,6 +35,7 @@
         :account="account"
         @removeBudget='removeBudget'
         @editedBudget='editBudget'
+        @budgetUpdated='updateBudget'
       />
     </div>
   </div>
@@ -59,6 +60,10 @@ export default {
     };
   },
   methods: {
+    updateBudget (budgetToUpdate) {
+      var now = new Date()
+      this.updateItem(budgetToUpdate, now)
+    },
     addBudget (newBudget) {
       var now = new Date()
       this.updateItem(newBudget, now)
@@ -72,7 +77,7 @@ export default {
     },
     async editBudget (editedBudgetId, editedBudget) {
       await this.$http.put(`/user/account/${this.account._id}/budgets/${editedBudgetId}`, editedBudget);
-    }
+    },
   },
   watch: {
     budgetList: function(newVal) {

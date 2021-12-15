@@ -124,28 +124,34 @@
       async newTransaction(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/budgets/${this.budget._id}/transactions/`, transactionToAdd);
         this.myBudget.transactions.push(response.data.addedTransaction)
+        this.$emit("budgetUpdated", this.myBudget)
         //console.log(response)
       },
       async removeTransaction(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/budgets/${this.budget._id}/transactions/${transactionToRemove._id}`);
         console.log(response)
+        this.$emit("budgetUpdated", this.myBudget)
       },
       async editTransaction(editedTransactionId, editedTransaction) {
         let response = await this.$http.put(`/user/account/${this.account._id}/budgets/${this.budget._id}/transactions/${editedTransactionId}`, editedTransaction);
         console.log(response)
+        this.$emit("budgetUpdated", this.myBudget)
       },
       async newSettlement(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/budgets/${this.budget._id}/settlements/`, transactionToAdd);
         this.myBudget.transactions.push(response.data.addedTransaction)
+        this.$emit("budgetUpdated", this.myBudget)
         //console.log(response)
       },
       async removeSettlement(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/budgets/${this.budget._id}/settlements/${transactionToRemove._id}`);
         console.log(response)
+        this.$emit("budgetUpdated", this.myBudget)
       },
       async editSettlement(editedTransactionId, editedTransaction) {
         let response = await this.$http.put(`/user/account/${this.account._id}/budgets/${this.budget._id}/settlements/${editedTransactionId}`, editedTransaction);
         console.log(response)
+        this.$emit("budgetUpdated", this.myBudget)
       }
     },
     mounted () {
