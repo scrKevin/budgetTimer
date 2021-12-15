@@ -142,7 +142,7 @@
       },
       async newSettlement(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/recurring/${this.recurring._id}/settlements/`, transactionToAdd);
-        this.myRecurring.settlements.push(response.data.addedTransaction)
+        this.myRecurring.settlements.push(response.data.addedSettlement)
         //console.log(response)
         this.$emit("recurringUpdated", this.myRecurring)
       },
