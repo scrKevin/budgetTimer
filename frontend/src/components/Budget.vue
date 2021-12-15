@@ -143,7 +143,7 @@
       },
       async newSettlement(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/budgets/${this.budget._id}/settlements/`, transactionToAdd);
-        this.myBudget.settlements.push(response.data.addedTransaction)
+        this.myBudget.settlements.push(response.data.addedSettlement)
         this.$emit("budgetUpdated", this.myBudget)
         //console.log(response)
       },
