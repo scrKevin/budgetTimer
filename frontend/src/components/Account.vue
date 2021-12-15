@@ -56,7 +56,11 @@
       <RecurringList :recurringList="myAccount.recurring" :account="myAccount"></RecurringList>
     <!-- </div> -->
     <div class="col-xs-12">
-      <BudgetList :budgetList="myAccount.budgets" :account="myAccount"></BudgetList>
+      <BudgetList 
+        :budgetList="myAccount.budgets" 
+        :account="myAccount" 
+        @budgetUpdated="budgetUpdated">
+      </BudgetList>
     </div>
     <div class="col-xs-12">
       <h4>Transactions: {{ myAccount.transactions.length }} <input type="checkbox" v-model="showTransactions"/></h4>
@@ -150,6 +154,9 @@
         this.myAccount.startbalance = data.startbalance
         this.myAccount.startdate = data.startdate
         //this.$emit("editedAccount", editedAccountId, data)
+      },
+      budgetUpdated() {
+        this.updateAccount(this.myAccount)
       },
       async newTransaction(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/transactions/`, transactionToAdd);

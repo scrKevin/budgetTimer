@@ -63,6 +63,7 @@ export default {
     updateBudget (budgetToUpdate) {
       var now = new Date()
       this.updateItem(budgetToUpdate, now)
+      this.$emit("budgetUpdated")
     },
     addBudget (newBudget) {
       var now = new Date()
