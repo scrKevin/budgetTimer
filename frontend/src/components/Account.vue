@@ -55,7 +55,7 @@
     <!-- <div class="col-xs-12"> -->
       <RecurringList 
         :recurringList="myAccount.recurring" 
-        :account="myAccount"> 
+        :account="myAccount"
         @recurringUpdated="itemUpdated">
       </RecurringList>
     <!-- </div> -->
