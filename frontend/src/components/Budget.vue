@@ -130,6 +130,10 @@
       async removeTransaction(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/budgets/${this.budget._id}/transactions/${transactionToRemove._id}`);
         console.log(response)
+        this.myBudget = this.myBudget.filter((transaction) => {
+          return response.data.removedTransactionId != transaction._id
+        })
+
         this.$emit("budgetUpdated", this.myBudget)
       },
       async editTransaction(editedTransactionId, editedTransaction) {
