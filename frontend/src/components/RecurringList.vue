@@ -36,6 +36,7 @@
         :account="account"
         @removeRecurring='removeRecurring'
         @editedRecurring='editRecurring'
+        @recurringUpdated='updateRecurring'
       />
     </div>
   </div>
@@ -61,6 +62,11 @@ export default {
     };
   },
   methods: {
+    updateRecurring (recurringToUpdate) {
+      var now = new Date()
+      this.updateItem(recurringToUpdate, now)
+      this.$emit("recurringUpdated")
+    },
     addRecurring (newRecurring) {
       var now = new Date()
       this.updateItem(newRecurring, now)

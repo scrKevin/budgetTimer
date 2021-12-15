@@ -143,13 +143,16 @@
       },
       async newSettlement(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/budgets/${this.budget._id}/settlements/`, transactionToAdd);
-        this.myBudget.transactions.push(response.data.addedTransaction)
+        this.myBudget.settlements.push(response.data.addedTransaction)
         this.$emit("budgetUpdated", this.myBudget)
         //console.log(response)
       },
       async removeSettlement(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/budgets/${this.budget._id}/settlements/${transactionToRemove._id}`);
         console.log(response)
+        this.myBudget.settlements = this.myBudget.settlements.filter((transaction) => {
+          return response.data.removedSettlementId != transaction._id
+        })
         this.$emit("budgetUpdated", this.myBudget)
       },
       async editSettlement(editedTransactionId, editedTransaction) {

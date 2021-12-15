@@ -124,28 +124,40 @@
       async newTransaction(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/recurring/${this.recurring._id}/transactions/`, transactionToAdd);
         this.myRecurring.transactions.push(response.data.addedTransaction)
+        this.$emit("recurringUpdated", this.myRecurring)
         //console.log(response)
       },
       async removeTransaction(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/recurring/${this.recurring._id}/transactions/${transactionToRemove._id}`);
         console.log(response)
+        this.myRecurring.transactions = this.myRecurring.transactions.filter((transaction) => {
+          return response.data.removedTransactionId != transaction._id
+        })
+        this.$emit("recurringUpdated", this.myRecurring)
       },
       async editTransaction(editedTransactionId, editedTransaction) {
         let response = await this.$http.put(`/user/account/${this.account._id}/recurring/${this.recurring._id}/transactions/${editedTransactionId}`, editedTransaction);
         console.log(response)
+        this.$emit("recurringUpdated", this.myRecurring)
       },
       async newSettlement(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/recurring/${this.recurring._id}/settlements/`, transactionToAdd);
-        this.myRecurring.transactions.push(response.data.addedTransaction)
+        this.myRecurring.settlements.push(response.data.addedTransaction)
         //console.log(response)
+        this.$emit("recurringUpdated", this.myRecurring)
       },
       async removeSettlement(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/recurring/${this.recurring._id}/settlements/${transactionToRemove._id}`);
         console.log(response)
+        this.myRecurring.settlements = this.myRecurring.settlements.filter((transaction) => {
+          return response.data.removedSettlementId != transaction._id
+        })
+        this.$emit("recurringUpdated", this.myRecurring)
       },
       async editSettlement(editedTransactionId, editedTransaction) {
         let response = await this.$http.put(`/user/account/${this.account._id}/recurring/${this.recurring._id}/settlements/${editedTransactionId}`, editedTransaction);
         console.log(response)
+        this.$emit("recurringUpdated", this.myRecurring)
       }
     },
     mounted () {

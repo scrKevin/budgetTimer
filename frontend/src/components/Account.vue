@@ -53,13 +53,17 @@
       Total recurring account velocity: {{ totalAccountRecurringVelocity.hour }} €/hour / {{ totalAccountRecurringVelocity.month }} €/month / {{ totalAccountRecurringVelocity.year }} €/year
     </div>
     <!-- <div class="col-xs-12"> -->
-      <RecurringList :recurringList="myAccount.recurring" :account="myAccount"></RecurringList>
+      <RecurringList 
+        :recurringList="myAccount.recurring" 
+        :account="myAccount"> 
+        @recurringUpdated="itemUpdated">
+      </RecurringList>
     <!-- </div> -->
     <div class="col-xs-12">
       <BudgetList 
         :budgetList="myAccount.budgets" 
         :account="myAccount" 
-        @budgetUpdated="budgetUpdated">
+        @budgetUpdated="itemUpdated">
       </BudgetList>
     </div>
     <div class="col-xs-12">
@@ -155,7 +159,7 @@
         this.myAccount.startdate = data.startdate
         //this.$emit("editedAccount", editedAccountId, data)
       },
-      budgetUpdated() {
+      itemUpdated() {
         var now = new Date()
         this.updateAccount(this.myAccount, now)
       },
