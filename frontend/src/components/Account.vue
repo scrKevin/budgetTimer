@@ -183,7 +183,7 @@
       },
       async newReservation(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/reservations/`, transactionToAdd);
-        this.myAccount.reservations.push(response.data.addedTransaction)
+        this.myAccount.reservations.push(response.data.addedReservation)
         this.itemUpdated()
         //console.log(response)
       },
