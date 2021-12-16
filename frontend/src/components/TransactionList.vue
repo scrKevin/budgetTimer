@@ -19,7 +19,7 @@
   <!-- </span> -->
   <div class="container grid-striped">
       <Transaction
-        v-for="transaction in myTransactionList"
+        v-for="transaction in sortedTransactionList"
         v-bind:key="transaction._id"
         :transaction="transaction"
         @removeTransaction='removeTransaction'
@@ -62,6 +62,11 @@ export default {
       //console.log(editedTransaction)
       this.$emit("editedTransaction", editedTransactionId, editedTransaction)
       //await this.$http.put(`/user/account/${this.accountId}/recurring/${editedRecurringId}`, editedRecurring);
+    }
+  },
+  computed: {
+    sortedTransactionList: function() {
+      return myTransactionList.sort((a,b)=>b.date.getTime()-a.date.getTime());
     }
   },
   watch: {
