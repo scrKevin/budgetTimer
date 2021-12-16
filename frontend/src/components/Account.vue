@@ -166,11 +166,16 @@
       async newTransaction(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/transactions/`, transactionToAdd);
         this.myAccount.transactions.push(response.data.addedTransaction)
+        this.itemUpdated()
         //console.log(response)
       },
       async removeTransaction(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/transactions/${transactionToRemove._id}`);
         console.log(response)
+        this.myAccount.transactions = this.myAccount.transactions.filter((transaction) => {
+          return response.data.removedTransactionId != transaction._id
+        })
+        this.itemUpdated()
       },
       async editTransaction(editedTransactionId, editedTransaction) {
         let response = await this.$http.put(`/user/account/${this.account._id}/transactions/${editedTransactionId}`, editedTransaction);
@@ -179,11 +184,16 @@
       async newReservation(transactionToAdd) {
         let response = await this.$http.post(`/user/account/${this.account._id}/reservations/`, transactionToAdd);
         this.myAccount.reservations.push(response.data.addedTransaction)
+        this.itemUpdated()
         //console.log(response)
       },
       async removeReservation(transactionToRemove) {
         let response = await this.$http.delete(`/user/account/${this.account._id}/reservations/${transactionToRemove._id}`);
         console.log(response)
+        this.myAccount.reservations = this.myAccount.reservations.filter((reservation) => {
+          return response.data.removedReservationId != reservation._id
+        })
+        this.itemUpdated()
       },
       async editReservation(editedTransactionId, editedTransaction) {
         let response = await this.$http.put(`/user/account/${this.account._id}/reservations/${editedTransactionId}`, editedTransaction);
