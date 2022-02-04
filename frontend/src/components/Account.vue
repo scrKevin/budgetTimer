@@ -50,7 +50,8 @@
       </b-button></h3>
     </div>
     <div class="col-xs-12">
-      Total recurring account velocity: {{ totalAccountRecurringVelocity.hour }} €/hour / {{ totalAccountRecurringVelocity.month }} €/month / {{ totalAccountRecurringVelocity.year }} €/year
+      Total recurring account velocity: {{ totalAccountRecurringVelocity.hour }} €/hour / {{ totalAccountRecurringVelocity.month }} €/month / {{ totalAccountRecurringVelocity.year }} €/year<br>
+      Total expenditure per year: € {{expenditurePerYear.year}}
     </div>
     <!-- <div class="col-xs-12"> -->
       <RecurringList 
@@ -214,6 +215,9 @@
         var vM = vH * 24 * 30
         var vY = vH * 24 * 365
         return {hour: vH.toFixed(6), month: vM.toFixed(2), year: vY.toFixed(2)}
+      },
+      expenditurePerYear: function() {
+        return {year: (this.myAccount.totalExpenditureVelocity * 60 * 60 * 24 * 365).toFixed(2)}
       }
     },
     watch: {

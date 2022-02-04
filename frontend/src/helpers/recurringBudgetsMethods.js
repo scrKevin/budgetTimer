@@ -198,6 +198,8 @@ export default {
       account.totalRecurringVelocity = 0;
       account.totalRecurringBalance = 0;
 
+      account.totalExpenditureVelocity = 0;
+
       account.expected = 0
 
       var nowMs = now.getTime()
@@ -215,6 +217,9 @@ export default {
         //console.log(recurring.upcomingTransactions)
         if (!recurring.ended) {
           account.totalRecurringVelocity += recurring.velocity
+          if (recurring.velocity < 0) {
+            account.totalExpenditureVelocity += recurring.velocity
+          }
         }
         account.totalRecurringBalance += recurring.recurringBalance
         account.expected += recurring.recurringBalance
@@ -230,6 +235,9 @@ export default {
         this.updateItem(budget, now, account.startdate)
         if (!budget.ended) {
           account.totalBudgetVelocity += budget.velocity
+          if (budget.velocity < 0) {
+            account.totalExpenditureVelocity += budget.velocity
+          }
         }
         if (budget.recurringBalance > 0) {
           account.expected += budget.recurringBalance
