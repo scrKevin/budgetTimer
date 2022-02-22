@@ -166,7 +166,12 @@ export default {
           let toSettle = 0
           if (budget.recurringBalance > 0 && budget.velocity > 0) {
             savings = budget.recurringBalance
-            toSettle = budget.amount
+            if (savings < budget.amount) {
+              toSettle = savings
+            }
+            else {
+              toSettle = budget.amount
+            }
           }
           for (let time of budget.nextTransactions) {
             
@@ -176,11 +181,19 @@ export default {
               amount: budget.amount - toSettle,
               time: new Date(+time),
             })
-            if (savings >= toSettle) {
+
+            if (savings > 0)
+            {
               savings -= toSettle
+              if (savings < budget.amount) {
+                toSettle = savings
+              }
+              else {
+                toSettle = budget.amount
+              }
             }
             else {
-              toSettle = savings
+              toSettle = 0
               savings = 0
             }
             nextId++;
