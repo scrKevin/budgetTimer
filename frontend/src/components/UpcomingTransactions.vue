@@ -181,6 +181,7 @@ export default {
             }
             else {
               toSettle = savings
+              savings = 0
             }
             nextId++;
           }
