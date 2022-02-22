@@ -162,14 +162,26 @@ export default {
       for (let budget of this.account.budgets) {
         if (!budget.ended)
         {
+          let savings = 0
+          let toSettle = 0
+          if (budget.recurringBalance > 0 && budget.velocity > 0) {
+            savings = budget.recurringBalance
+            toSettle = budget.amount
+          }
           for (let time of budget.nextTransactions) {
             
             totalArray.push({
               id: nextId,
               title: budget.title,
-              amount: budget.amount,
+              amount: budget.amount - toSettle,
               time: new Date(+time),
             })
+            if (savings >= toSettle) {
+              savings -= toSettle
+            }
+            else {
+              toSettle = savings
+            }
             nextId++;
           }
         }
