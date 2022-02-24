@@ -1,6 +1,6 @@
 <template>
   <span>
-    <b-modal v-model="showModal" @hide="close()" title="">
+    <b-modal v-model="showModal" hide-footer @hide="close()" title="">
       
       <section class="modal-title">
         <slot name="header">
